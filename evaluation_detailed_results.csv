@@ -1,0 +1,5 @@
+metric,value
+substance_accuracy,0.803921568627451
+symptom_f1,0.8873742910252133
+symptom_precision,0.8973395026026605
+symptom_recall,0.8776279815216367
