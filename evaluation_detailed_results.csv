@@ -1,5 +1,5 @@
 metric,value
-substance_accuracy,0.803921568627451
-symptom_f1,0.8873742910252133
-symptom_precision,0.8973395026026605
-symptom_recall,0.8776279815216367
+substance_accuracy,0.9605939463163906
+symptom_f1,0.8669984387197502
+symptom_precision,0.8984730508645971
+symptom_recall,0.837654379183558
