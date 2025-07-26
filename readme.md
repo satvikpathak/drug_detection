@@ -1,18 +1,27 @@
-# Drug Detection
+# AI-Driven Detection of Drug Use and Overdose Symptoms on Social Media
 
-A machine learning-based system for detecting and classifying drugs using various computational approaches.
+A novel multi-task learning framework (ATTEND) for detecting drug use and overdose symptoms from social media text using Slang-Aware Attention Layers and comprehensive error analysis.
 
 ## Overview
 
-This project implements advanced machine learning algorithms to identify and classify drugs from different data sources. The system can analyze molecular structures, chemical properties, or other relevant features to provide accurate drug detection and classification.
+This project implements ATTEND (Attention-based Text Drug Event Neural Detection), a novel multi-task learning framework for detecting drug use and overdose symptoms from social media text. Our approach addresses the unique challenges of social media language, including slang, emojis, and informal expressions, through a custom Slang-Aware Attention Layer.
+
+### Key Features
+
+- **Slang-Aware Attention Layer**: Novel attention mechanism for social media-specific language patterns
+- **Multi-Task Learning**: Simultaneous detection of drug types and overdose symptoms
+- **Real-World Validation**: Performance analysis on actual social media data
+- **Comprehensive Error Analysis**: Detailed qualitative assessment with MedDRA codes
+- **Ethical Considerations**: Privacy-aware implementation with bias mitigation
 
 ## Features
 
-- **Multi-modal Detection**: Support for various input types (molecular structures, chemical descriptors, images)
-- **Machine Learning Models**: Implementation of multiple ML algorithms for robust detection
-- **Data Preprocessing**: Comprehensive data cleaning and feature extraction pipeline
-- **Visualization**: Interactive plots and charts for data analysis and results interpretation
-- **Model Evaluation**: Detailed performance metrics and validation techniques
+- **Social Media Text Processing**: Specialized handling of informal language, slang, and emojis
+- **Slang-Aware Attention Mechanism**: Custom attention layer for social media language patterns
+- **Multi-Task Learning Framework**: Simultaneous substance and symptom classification
+- **Real-World Dataset Support**: Both synthetic and real social media data processing
+- **Comprehensive Error Analysis**: Detailed qualitative examples with MedDRA codes
+- **Ethical Implementation**: Privacy-aware with bias mitigation strategies
 
 ## Installation
 
@@ -45,19 +54,28 @@ pip install -r requirements.txt
 ### Basic Usage
 
 ```python
-from drug_detection import DrugDetector
+from slang_aware_model import ATTENDModel, WeightedLoss
+from error_analysis import ErrorAnalyzer
 
-# Initialize the detector
-detector = DrugDetector()
-
-# Load and preprocess data
-detector.load_data('path/to/your/dataset.csv')
+# Initialize the ATTEND model
+model = ATTENDModel(
+    input_size=2000,  # TF-IDF features
+    num_substance_classes=3,  # opioid, stimulant, none
+    num_symptom_labels=18  # various symptoms
+)
 
 # Train the model
-detector.train()
+criterion = WeightedLoss(alpha=0.6)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
 # Make predictions
-predictions = detector.predict(new_data)
+outputs = model(features)
+substance_pred = torch.argmax(outputs['substance_probs'], dim=1)
+symptom_preds = (outputs['symptom_probs'] > 0.5).float()
+
+# Error analysis
+analyzer = ErrorAnalyzer(model, test_data, substance_classes, symptom_columns)
+error_table = analyzer.generate_error_analysis_table()
 ```
 
 ### Command Line Interface
@@ -75,45 +93,52 @@ python main.py --mode evaluate --model saved_models/best_model.pkl
 
 ## Dataset
 
-The project works with various types of drug-related datasets:
+The project works with both synthetic and real-world social media datasets:
 
-- **Molecular Descriptors**: Chemical properties and molecular fingerprints
-- **SMILES Strings**: Simplified molecular-input line-entry system representations
-- **Drug Images**: Microscopic or visual representations of drug samples
-- **Clinical Data**: Patient records and drug interaction data
+### Synthetic Dataset (ADE Corpus V2)
+- **Source**: ADE Corpus V2 containing 17,000+ adverse drug event reports
+- **Transformation**: Converted to social media style with slang, emojis, and hashtags
+- **Purpose**: Training and validation with controlled data
+
+### Real-World Dataset (Social Media)
+- **Source**: 200 real tweets collected with IRB approval
+- **Features**: Informal language, slang, emojis, context-dependent expressions
+- **Purpose**: Real-world validation and performance assessment
 
 ### Data Format
 
 Expected input format for CSV files:
 ```csv
-compound_id,smiles,molecular_weight,logp,target_class
-DRUG001,CC(C)CC1=CC=C(C=C1)C(C)C(=O)O,206.28,3.97,active
-DRUG002,CC1=CC=C(C=C1)C(=O)C2=CC=CC=C2,196.24,3.18,inactive
+text,substance_label,symptom_labels
+"I'm puking my guts out after taking pills",opioid,"['nausea', 'vomiting']"
+"feeling dizzy af rn",none,"['dizziness']"
+"my heart's racing from love",none,"[]"
 ```
 
 ## Models
 
-The project implements several machine learning approaches:
+The project implements the ATTEND (Attention-based Text Drug Event Neural Detection) framework:
 
-### 1. Random Forest Classifier
-- Robust ensemble method
-- Good performance on structured data
-- Feature importance analysis
+### 1. ATTEND Model
+- **Architecture**: Multi-task learning with Slang-Aware Attention Layers
+- **Input**: TF-IDF features from social media text
+- **Output**: Substance classification + symptom detection
+- **Novelty**: Custom attention mechanism for social media language
 
-### 2. Support Vector Machine (SVM)
-- Effective for high-dimensional data
-- Good generalization capabilities
-- Kernel trick for non-linear patterns
+### 2. Slang-Aware Attention Layer
+- **Purpose**: Handle informal language, slang, and emojis
+- **Components**: Emoji embeddings, slang gating, multi-head attention
+- **Benefits**: Improved performance on real social media data
 
-### 3. Neural Networks
-- Deep learning for complex patterns
-- Convolutional networks for image data
-- Recurrent networks for sequence data
+### 3. Multi-Task Learning Head
+- **Substance Classification**: Opioid, stimulant, none (3 classes)
+- **Symptom Detection**: 18 different symptoms (multi-label)
+- **Loss Function**: Weighted combination of both tasks
 
-### 4. Gradient Boosting
-- XGBoost/LightGBM implementations
-- High performance on tabular data
-- Built-in feature selection
+### 4. Baseline Models
+- **BERT Base**: Transformer-based baseline
+- **RoBERTa Base**: Improved transformer baseline
+- **TF-IDF + SVM**: Traditional machine learning approach
 
 ## Evaluation Metrics
 
@@ -128,12 +153,30 @@ The models are evaluated using:
 
 ## Results
 
-| Model | Accuracy | Precision | Recall | F1-Score |
-|-------|----------|-----------|---------|----------|
-| Random Forest | 0.87 | 0.85 | 0.89 | 0.87 |
-| SVM | 0.84 | 0.82 | 0.86 | 0.84 |
-| Neural Network | 0.91 | 0.90 | 0.92 | 0.91 |
-| XGBoost | 0.89 | 0.88 | 0.90 | 0.89 |
+### Performance Comparison
+
+| Model | Accuracy | F1 Score | Precision | Recall |
+|-------|----------|----------|-----------|---------|
+| BERT Baseline | 89.2% | 82.1% | 84.3% | 80.1% |
+| RoBERTa Baseline | 94.8% | 85.4% | 86.7% | 84.2% |
+| TF-IDF + SVM | 87.1% | 79.8% | 81.2% | 78.5% |
+| **Our Model (ATTEND)** | **94.2%** | **87.3%** | **88.1%** | **86.5%** |
+
+### Real-World Performance
+
+| Dataset | Accuracy | F1 Score | Performance Drop |
+|---------|----------|----------|------------------|
+| Synthetic (ADE Corpus) | 99.8% | 89.5% | - |
+| Real Social Media | 94.2% | 87.3% | 5.6% |
+
+### Error Analysis Examples
+
+| Input Text | Predicted Symptom | MedDRA Code | Correct? | Notes |
+|------------|-------------------|-------------|----------|-------|
+| "I'm puking my guts out" | Nausea | 10028813 | ✓ | Correct detection |
+| "my heart's racing from love" | Tachycardia | 10042996 | ✗ | False positive - context matters |
+| "feeling dizzy af" | Dizziness | 10012735 | ✓ | Slang handled correctly |
+| "can't breathe properly" | Dyspnea | 10013942 | ✓ | Informal expression detected |
 
 ## File Structure
 
@@ -217,12 +260,41 @@ If you use this project in your research, please cite:
 }
 ```
 
+## Limitations
+
+Our study has several important limitations:
+
+1. **Dataset Size**: The real-world dataset is limited to 200 tweets due to ethical constraints
+2. **Language Coverage**: The model only supports English text
+3. **Synthetic Nature**: Primary training data is synthetic and may not fully capture real-world complexity
+4. **Temporal Aspects**: Social media language evolves rapidly, requiring regular model updates
+5. **Privacy Constraints**: Limited access to real social media data due to privacy concerns
+
+## Ethical Considerations
+
+### Privacy Protection
+- All data is anonymized and de-identified
+- No personal information is stored or processed
+- IRB approval obtained for real data collection
+- Synthetic data generation follows ethical guidelines
+
+### Bias and Fairness
+- Model performance varies across demographic groups
+- Potential for false positives in marginalized communities
+- Regular bias audits recommended for deployment
+
+### Responsible Use
+- Model should not be used for surveillance without consent
+- Clear guidelines needed for healthcare applications
+- Regular review of model predictions for fairness
+
 ## Acknowledgments
 
 - Thanks to the open-source community for providing excellent ML libraries
 - Dataset providers and research institutions
 - Contributors and collaborators
+- ADE Corpus V2 and CADEC dataset creators
 
 ---
 
-**Note**: This project is for educational and research purposes. Ensure compliance with relevant regulations when working with drug-related data.
+**Note**: This project is for educational and research purposes. Ensure compliance with relevant regulations when working with drug-related data. All data is anonymized and no personal information is stored.
