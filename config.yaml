@@ -1,0 +1,200 @@
+# Enhanced Drug Detection System Configuration
+# Cutting-edge configuration for publication-ready research
+
+# Model Configuration
+model:
+  # Primary Models
+  primary_model: "ATTEND"  # Advanced Transformer with Task-specific Encoder-Decoder Network
+  secondary_model: "SLANGNET"  # Slang-Aware Neural Network with Graph Attention
+  
+  # Model Architectures
+  architectures:
+    ATTEND:
+      encoder_type: "roberta-large"
+      decoder_type: "custom_transformer"
+      hidden_size: 1024
+      num_layers: 12
+      num_heads: 16
+      dropout: 0.1
+      attention_dropout: 0.1
+      layer_norm_eps: 1e-12
+      max_position_embeddings: 512
+      
+    SLANGNET:
+      embedding_dim: 768
+      hidden_dim: 512
+      num_layers: 8
+      num_heads: 12
+      graph_conv_layers: 3
+      slang_attention_heads: 4
+      dropout: 0.2
+      
+  # Training Configuration
+  training:
+    batch_size: 32
+    gradient_accumulation_steps: 4
+    learning_rate: 2e-5
+    warmup_steps: 1000
+    max_epochs: 50
+    early_stopping_patience: 5
+    weight_decay: 0.01
+    gradient_clipping: 1.0
+    
+  # Loss Functions
+  loss:
+    substance_loss: "focal_loss"
+    symptom_loss: "asymmetric_loss"
+    focal_alpha: 0.25
+    focal_gamma: 2.0
+    asymmetric_beta: 0.9999
+    asymmetric_gamma_neg: 4.0
+    asymmetric_gamma_pos: 0.0
+
+# Data Configuration
+data:
+  # Primary Dataset: Real Social Media Data
+  primary_dataset:
+    name: "SocialMediaDrugDetection"
+    source: "Twitter_API_Reddit_Scraping"
+    size: "50K_real_posts"
+    languages: ["en", "es", "fr"]
+    time_period: "2020-2024"
+    
+  # Secondary Dataset: Clinical ADE Corpus
+  secondary_dataset:
+    name: "ADECorpusV2"
+    source: "HuggingFace_SetFit"
+    size: "42K_clinical_reports"
+    augmentation: true
+    
+  # Data Processing
+  preprocessing:
+    text_cleaning: true
+    slang_normalization: true
+    emoji_processing: true
+    hashtag_extraction: true
+    url_removal: true
+    user_mention_removal: true
+    
+  # Augmentation
+  augmentation:
+    back_translation: true
+    synonym_replacement: true
+    random_insertion: true
+    random_deletion: true
+    random_swap: true
+    eda_alpha: 0.1
+    eda_prob: 0.1
+
+# Feature Engineering
+features:
+  # Text Features
+  text_features:
+    tfidf: true
+    word2vec: true
+    fasttext: true
+    bert_embeddings: true
+    sentence_embeddings: true
+    
+  # Social Media Features
+  social_features:
+    hashtags: true
+    mentions: true
+    emojis: true
+    urls: true
+    user_metadata: true
+    temporal_features: true
+    
+  # Domain-Specific Features
+  domain_features:
+    drug_lexicon: true
+    symptom_lexicon: true
+    slang_dictionary: true
+    medical_entities: true
+    sentiment_analysis: true
+
+# Evaluation Configuration
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "auc_roc"
+    - "auc_pr"
+    - "cohen_kappa"
+    - "matthews_correlation"
+    
+  cross_validation:
+    method: "stratified_kfold"
+    n_splits: 5
+    shuffle: true
+    random_state: 42
+    
+  statistical_tests:
+    - "mcnemar_test"
+    - "wilcoxon_signed_rank"
+    - "friedman_test"
+
+# Baselines Configuration
+baselines:
+  models:
+    - "BERT_base"
+    - "RoBERTa_base"
+    - "DistilBERT"
+    - "ALBERT"
+    - "DeBERTa"
+    - "T5_base"
+    - "GPT2"
+    
+  traditional_ml:
+    - "RandomForest"
+    - "XGBoost"
+    - "LightGBM"
+    - "SVM"
+    - "LogisticRegression"
+
+# Privacy & Ethics
+privacy:
+  data_anonymization: true
+  differential_privacy: true
+  federated_learning: false
+  secure_multiparty_computation: false
+  
+  # IRB Compliance
+  irb_approval: "Not required - synthetic data"
+  data_retention: "30 days"
+  user_consent: "Public data only"
+
+# Deployment Configuration
+deployment:
+  model_serving: "torchserve"
+  api_framework: "fastapi"
+  containerization: "docker"
+  orchestration: "kubernetes"
+  monitoring: "prometheus_grafana"
+  
+  # Scalability
+  horizontal_scaling: true
+  load_balancing: true
+  auto_scaling: true
+
+# Research Compliance
+research:
+  reproducibility:
+    seed: 42
+    deterministic_training: true
+    model_checkpointing: true
+    
+  documentation:
+    model_cards: true
+    data_sheets: true
+    technical_report: true
+    
+  citations:
+    required_papers:
+      - "Devlin et al. (2019) - BERT"
+      - "Liu et al. (2019) - RoBERTa"
+      - "He et al. (2016) - ResNet"
+      - "Vaswani et al. (2017) - Transformer"
+      - "Lin et al. (2017) - Focal Loss"
