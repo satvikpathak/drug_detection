@@ -445,7 +445,7 @@ def train_attend_fold(X_train, y_sub_train, y_sym_train,
         model.parameters(), lr=config['lr'], weight_decay=config['weight_decay']
     )
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=3, min_lr=1e-6, verbose=False
+        optimizer, mode='min', factor=0.5, patience=3, min_lr=1e-6
     )
 
     # ── Data loaders with balanced sampling ──
